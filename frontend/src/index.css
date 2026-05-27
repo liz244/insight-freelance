@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "tailwindcss";
+
+.btn-primary {
+  @apply bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition;
+}
+
+.btn-secondary {
+  @apply border border-indigo-200 text-indigo-700 px-5 py-2 rounded-lg hover:bg-indigo-50 transition;
+}
+
+.card {
+  @apply bg-white border border-gray-200 rounded-xl shadow-sm p-6;
+}
+
+.input {
+  @apply border border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400;
+}
+
+.page-title {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+.section-title {
+  @apply text-2xl font-bold text-gray-900;
+}
