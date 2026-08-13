@@ -155,7 +155,7 @@ function ReviewBox({ requestId }: { requestId: string }) {
       <StarRating value={rating} onChange={setRating} />
       <textarea
         className="input min-h-20"
-        placeholder="Un commentaire (optionnel)"
+        placeholder="Un commentaire (optionnel)" aria-label="Un commentaire (optionnel)"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
@@ -166,6 +166,76 @@ function ReviewBox({ requestId }: { requestId: string }) {
       >
         Envoyer l'avis
       </button>
+    </div>
+  );
+}
+
+function ImageUpload({
+  value,
+  onChange,
+  label = "Image",
+}: {
+  value: string;
+  onChange: (url: string) => void;
+  label?: string;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setError("");
+    setUploading(true);
+
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await API.post("/upload/image", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const fullUrl = `${API.defaults.baseURL}${res.data.url}`;
+      onChange(fullUrl);
+    } catch (err) {
+      console.error(err);
+      setError("Erreur lors de l'envoi de l'image.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <label className="text-sm text-gray-600 block">{label}</label>
+
+      <div className="flex items-center gap-4">
+        {value && (
+          <img
+            src={value}
+            alt="Aperçu"
+            className="w-16 h-16 rounded-lg object-cover border border-gray-200"
+          />
+        )}
+
+        <label className="btn-secondary cursor-pointer text-sm">
+          {uploading ? "Envoi en cours..." : "Choisir une image"}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            onChange={handleFile}
+            className="hidden"
+            disabled={uploading}
+          />
+        </label>
+      </div>
+
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 }
@@ -355,7 +425,7 @@ function Login() {
         <div className="card space-y-4">
           <input
             className="input"
-            placeholder="Email"
+            placeholder="Email" aria-label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
@@ -499,7 +569,7 @@ function Register() {
 
             <input
               className="input"
-              placeholder="Email"
+              placeholder="Email" aria-label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -598,7 +668,7 @@ const sendRequest = async () => {
           {profile.avatar_url && (
             <img
               src={profile.avatar_url}
-              alt="avatar"
+              alt={`Photo de profil de ${profile.name}`}
               className="w-36 h-36 rounded-full object-cover border-4 border-indigo-100"
             />
           )}
@@ -660,25 +730,25 @@ const sendRequest = async () => {
 
             <div className="flex flex-wrap gap-3 pt-2">
               {profile.linkedin_url && (
-                <a href={profile.linkedin_url} target="_blank" className="btn-secondary">
+                <a href={profile.linkedin_url} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                   LinkedIn
                 </a>
               )}
 
               {profile.portfolio_url && (
-                <a href={profile.portfolio_url} target="_blank" className="btn-secondary">
+                <a href={profile.portfolio_url} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                   Portfolio
                 </a>
               )}
 
               {profile.github_url && (
-                <a href={profile.github_url} target="_blank" className="btn-secondary">
+                <a href={profile.github_url} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                   GitHub
                 </a>
               )}
 
               {profile.instagram_url && (
-                <a href={profile.instagram_url} target="_blank" className="btn-secondary">
+                <a href={profile.instagram_url} target="_blank" rel="noopener noreferrer" className="btn-secondary">
                   Instagram
                 </a>
               )}
@@ -748,7 +818,7 @@ const sendRequest = async () => {
           <div className="space-y-4">
             <input
               type="text"
-              placeholder="Votre nom"
+              placeholder="Votre nom" aria-label="Votre nom"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
               className="input"
@@ -756,7 +826,7 @@ const sendRequest = async () => {
 
             <input
               type="email"
-              placeholder="Votre email"
+              placeholder="Votre email" aria-label="Votre email"
               value={clientEmail}
               onChange={(e) => setClientEmail(e.target.value)}
               className="input"
@@ -765,6 +835,7 @@ const sendRequest = async () => {
             {services.length > 0 && (
               <select
                 className="input"
+                aria-label="Choisir un service"
                 value={selectedServiceId}
                 onChange={(e) => setSelectedServiceId(e.target.value)}
               >
@@ -790,7 +861,7 @@ const sendRequest = async () => {
             </div>
 
             <textarea
-              placeholder="Décrivez votre besoin"
+              placeholder="Décrivez votre besoin" aria-label="Décrivez votre besoin"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               className="input min-h-32"
@@ -1167,7 +1238,7 @@ const deletePortfolioImage = async (imageId: string) => {
           {myProfile.avatar_url && (
             <img
               src={myProfile.avatar_url}
-              alt="avatar"
+              alt={`Photo de profil de ${myProfile.name}`}
               className="w-28 h-28 rounded-full object-cover border-4 border-indigo-100"
             />
           )}
@@ -1209,21 +1280,21 @@ const deletePortfolioImage = async (imageId: string) => {
 
           <input
             className="input"
-            placeholder="Titre du service"
+            placeholder="Titre du service" aria-label="Titre du service"
             value={serviceTitle}
             onChange={(e) => setServiceTitle(e.target.value)}
           />
 
           <textarea
             className="input"
-            placeholder="Description"
+            placeholder="Description" aria-label="Description"
             value={serviceDescription}
             onChange={(e) => setServiceDescription(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Prix"
+            placeholder="Prix" aria-label="Prix"
             value={servicePrice}
             onChange={(e) => setServicePrice(e.target.value)}
           />
@@ -1245,16 +1316,15 @@ const deletePortfolioImage = async (imageId: string) => {
 
           <input
             className="input"
-            placeholder="Titre"
+            placeholder="Titre" aria-label="Titre"
             value={portfolioTitle}
             onChange={(e) => setPortfolioTitle(e.target.value)}
           />
 
-          <input
-            className="input"
-            placeholder="URL image"
+          <ImageUpload
             value={portfolioImageUrl}
-            onChange={(e) => setPortfolioImageUrl(e.target.value)}
+            onChange={setPortfolioImageUrl}
+            label="Image de la réalisation"
           />
 
           <button
@@ -1428,6 +1498,7 @@ const deletePortfolioImage = async (imageId: string) => {
                 </p>
 
                 <select
+                  aria-label="Statut de la demande"
                   value={request.status}
                   onChange={(e) =>
                     updateStatus(request.id, e.target.value)
@@ -1613,29 +1684,29 @@ function MonProfil() {
             Identité
           </h2>
 
-          <input
-            className="input"
-            placeholder="URL avatar"
+          <ImageUpload
             value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
+            onChange={setAvatarUrl}
+            label="Photo de profil"
           />
 
           <input
             className="input"
-            placeholder="Nom"
+            placeholder="Nom" aria-label="Nom"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Titre / métier"
+            placeholder="Titre / métier" aria-label="Titre / métier"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
         <select
             className="input"
+            aria-label="Catégorie"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -1648,7 +1719,7 @@ function MonProfil() {
           <input
             className="input"
             list="cities-list-profile"
-            placeholder="Ville"
+            placeholder="Ville" aria-label="Ville"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
@@ -1666,20 +1737,21 @@ function MonProfil() {
 
           <textarea
             className="input min-h-32"
-            placeholder="Bio"
+            placeholder="Bio" aria-label="Bio"
             value={bio}
             onChange={(e) => setBio(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Années d'expérience"
+            placeholder="Années d'expérience" aria-label="Années d'expérience"
             value={experienceYears}
             onChange={(e) => setExperienceYears(e.target.value)}
           />
 
           <select
             className="input"
+            aria-label="Disponibilité"
             value={availability}
             onChange={(e) => setAvailability(e.target.value)}
           >
@@ -1691,7 +1763,7 @@ function MonProfil() {
 
           <input
             className="input"
-            placeholder="Tarif de départ"
+            placeholder="Tarif de départ" aria-label="Tarif de départ"
             value={startingPrice}
             onChange={(e) => setStartingPrice(e.target.value)}
           />
@@ -1704,28 +1776,28 @@ function MonProfil() {
 
           <input
             className="input"
-            placeholder="LinkedIn URL"
+            placeholder="LinkedIn URL" aria-label="LinkedIn URL"
             value={linkedinUrl}
             onChange={(e) => setLinkedinUrl(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Portfolio URL"
+            placeholder="Portfolio URL" aria-label="Portfolio URL"
             value={portfolioUrl}
             onChange={(e) => setPortfolioUrl(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="GitHub URL"
+            placeholder="GitHub URL" aria-label="GitHub URL"
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Instagram URL"
+            placeholder="Instagram URL" aria-label="Instagram URL"
             value={instagramUrl}
             onChange={(e) => setInstagramUrl(e.target.value)}
           />
@@ -1823,23 +1895,22 @@ function MonProfilClient() {
             </p>
           </div>
 
-          <input
-            className="input"
-            placeholder="URL avatar"
+          <ImageUpload
             value={avatarUrl}
-            onChange={(e) => setAvatarUrl(e.target.value)}
+            onChange={setAvatarUrl}
+            label="Photo de profil"
           />
 
           <input
             className="input"
-            placeholder="Nom"
+            placeholder="Nom" aria-label="Nom"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
           <input
             className="input"
-            placeholder="Ville"
+            placeholder="Ville" aria-label="Ville"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
@@ -1978,7 +2049,7 @@ function ConversationDetail() {
           <div className="flex gap-3 pt-4 border-t border-gray-100">
             <input
               className="input flex-1"
-              placeholder="Écrire un message..."
+              placeholder="Écrire un message..." aria-label="Écrire un message..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
@@ -2041,6 +2112,7 @@ function Favorites() {
               <div key={f.id} className="card relative">
                 <button
                   onClick={() => removeFavorite(f.profile_id)}
+                  aria-label={`Retirer ${f.name} des favoris`}
                   className="absolute top-4 right-4 text-xl text-pink-500"
                 >
                   <FaHeart />
@@ -2199,14 +2271,14 @@ function Support() {
 
           <input
             className="input"
-            placeholder="Sujet"
+            placeholder="Sujet" aria-label="Sujet"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
           />
 
           <textarea
             className="input min-h-32"
-            placeholder="Décrivez votre problème..."
+            placeholder="Décrivez votre problème..." aria-label="Décrivez votre problème..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
@@ -2429,6 +2501,7 @@ function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-gray-900">{t.subject}</p>
                   <select
+                    aria-label="Statut du ticket"
                     value={t.status}
                     onChange={(e) => updateTicketStatus(t.id, e.target.value)}
                     className="input"
@@ -2471,6 +2544,8 @@ function Footer() {
         <a
           href="https://instagram.com"
           target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
           className="hover:text-pink-500 transition"
         >
           <FaInstagram />
@@ -2479,6 +2554,8 @@ function Footer() {
         <a
           href="https://linkedin.com"
           target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
           className="hover:text-blue-500 transition"
         >
           <FaLinkedin />
@@ -2487,6 +2564,8 @@ function Footer() {
         <a
           href="https://tiktok.com"
           target="_blank"
+          rel="noopener noreferrer"
+          aria-label="TikTok"
           className="hover:text-black transition"
         >
           <FaTiktok />
@@ -2495,6 +2574,8 @@ function Footer() {
         <a
           href="https://facebook.com"
           target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
           className="hover:text-blue-600 transition"
         >
           <FaFacebookF />
@@ -2503,6 +2584,8 @@ function Footer() {
         <a
           href="https://x.com"
           target="_blank"
+          rel="noopener noreferrer"
+          aria-label="X (anciennement Twitter)"
           className="hover:text-gray-900 transition"
         >
           <FaXTwitter />
@@ -2839,7 +2922,7 @@ useEffect(() => {
         <div className="card mb-8 space-y-4">
           <input
             className="input text-lg"
-            placeholder="Rechercher un nom, un métier, une ville, une catégorie..."
+            placeholder="Rechercher un nom, un métier, une ville, une catégorie..." aria-label="Rechercher un nom, un métier, une ville, une catégorie..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -2847,6 +2930,7 @@ useEffect(() => {
           <div className="grid md:grid-cols-5 gap-4">
             <select
               className="input"
+              aria-label="Filtrer par catégorie"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -2859,7 +2943,7 @@ useEffect(() => {
             <input
               className="input"
               list="cities-list-search"
-              placeholder="Ville"
+              placeholder="Ville" aria-label="Ville"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
@@ -2871,6 +2955,7 @@ useEffect(() => {
 
             <select
               className="input"
+              aria-label="Filtrer par disponibilité"
               value={availability}
               onChange={(e) => setAvailability(e.target.value)}
             >
@@ -2883,7 +2968,7 @@ useEffect(() => {
             <input
               className="input"
               type="number"
-              placeholder="Prix min"
+              placeholder="Prix min" aria-label="Prix min"
               value={priceMin}
               onChange={(e) => setPriceMin(e.target.value)}
             />
@@ -2891,7 +2976,7 @@ useEffect(() => {
             <input
               className="input"
               type="number"
-              placeholder="Prix max"
+              placeholder="Prix max" aria-label="Prix max"
               value={priceMax}
               onChange={(e) => setPriceMax(e.target.value)}
             />
@@ -2909,6 +2994,7 @@ useEffect(() => {
 
               <button
                 onClick={(e) => toggleFavorite(e, p.id)}
+                aria-label={favoriteIds.includes(p.id) ? `Retirer ${p.name} des favoris` : `Ajouter ${p.name} aux favoris`}
                 className="absolute top-4 right-4 text-xl text-pink-500 hover:scale-110 transition"
               >
                 {favoriteIds.includes(p.id) ? <FaHeart /> : <FaRegHeart />}

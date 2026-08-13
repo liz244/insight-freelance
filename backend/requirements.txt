@@ -4,3 +4,6 @@ sqlalchemy
 python-jose[cryptography]
 pydantic[email]
 python-multipart
+Pillow
+pytest
+httpx
