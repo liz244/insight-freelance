@@ -6,10 +6,16 @@ from .routers import profile
 from .routers import requests
 from .routers import services
 from .routers import dashboard
-from .routers import request
-from .routers import portfolio
 
+from .routers import portfolio
+from .routers import client
+from .routers import conversations
+from .routers import favorites
+from .routers import support
+from .routers import admin
+from .routers import reviews
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI()
 app.add_middleware(
@@ -28,5 +34,11 @@ app.include_router(profile.router)
 app.include_router(requests.router)
 app.include_router(services.router)
 app.include_router(dashboard.router)
-app.include_router(request.router)
+
 app.include_router(portfolio.router)
+app.include_router(client.router)
+app.include_router(conversations.router)
+app.include_router(favorites.router)
+app.include_router(support.router)
+app.include_router(admin.router)
+app.include_router(reviews.router)

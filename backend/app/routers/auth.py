@@ -24,7 +24,8 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     new_user = models.User(
         email=user.email,
-        password=hashed_password
+        password=hashed_password,
+        role=user.role or "client"
     )
 
     db.add(new_user)
@@ -43,6 +44,9 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 
     if not auth.verify_password(user.password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    if db_user.suspended:
+        raise HTTPException(status_code=403, detail="Ce compte a été suspendu")
 
     access_token = auth.create_access_token(data={"sub": db_user.email})
 

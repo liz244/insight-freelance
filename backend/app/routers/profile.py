@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import or_
+from typing import Optional
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from .. import models, schemas, database, auth
@@ -84,8 +86,59 @@ def get_my_profile(
 
 
 @router.get("/", response_model=list[schemas.ProfileOut])
-def get_profiles(db: Session = Depends(get_db)):
-    return db.query(models.FreelanceProfile).all()
+def get_profiles(
+    q: Optional[str] = Query(None, description="Recherche libre : nom, métier, ville, catégorie"),
+    category: Optional[str] = None,
+    city: Optional[str] = None,
+    availability: Optional[str] = None,
+    price_min: Optional[int] = None,
+    price_max: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(models.FreelanceProfile)
+
+    if q:
+        like = f"%{q}%"
+        query = query.filter(
+            or_(
+                models.FreelanceProfile.name.ilike(like),
+                models.FreelanceProfile.title.ilike(like),
+                models.FreelanceProfile.city.ilike(like),
+                models.FreelanceProfile.category.ilike(like),
+            )
+        )
+
+    if category:
+        query = query.filter(models.FreelanceProfile.category.ilike(f"%{category}%"))
+
+    if city:
+        query = query.filter(models.FreelanceProfile.city.ilike(f"%{city}%"))
+
+    if availability:
+        query = query.filter(models.FreelanceProfile.availability == availability)
+
+    profiles = query.all()
+
+    if price_min is not None or price_max is not None:
+        def safe_int(value):
+            try:
+                return int(value)
+            except (TypeError, ValueError):
+                return None
+
+        filtered = []
+        for p in profiles:
+            price = safe_int(p.starting_price)
+            if price is None:
+                continue
+            if price_min is not None and price < price_min:
+                continue
+            if price_max is not None and price > price_max:
+                continue
+            filtered.append(p)
+        return filtered
+
+    return profiles
 
 
 @router.get("/{slug}", response_model=schemas.ProfileOut)
