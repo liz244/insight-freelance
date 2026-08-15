@@ -409,11 +409,15 @@ function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 flex items-center justify-center">
       <div className="w-full max-w-sm">
+<Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
+          ← Retour à l'accueil
+        </Link>
 
         <div className="text-center mb-8">
           <Link to="/" className="text-2xl font-bold text-indigo-700">
             Insight Freelance
           </Link>
+        
           <h1 className="text-3xl font-bold text-gray-900 mt-6">
             Bon retour parmi nous
           </h1>
@@ -483,7 +487,9 @@ function Register() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-16 flex items-center justify-center">
       <div className="w-full max-w-2xl">
-
+<Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
+          ← Retour à l'accueil
+        </Link>
         <div className="text-center mb-10">
           <p className="text-sm font-semibold tracking-wide text-indigo-600 uppercase">
             Bienvenue
@@ -660,9 +666,16 @@ const sendRequest = async () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-10">
       <div className="max-w-5xl mx-auto space-y-8">
 
-        <Link to="/freelances" className="text-indigo-600 hover:underline">
-          ← Retour aux freelances
-        </Link>
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <Link to="/freelances" className="text-indigo-600 hover:underline">
+            ← Retour aux freelances
+          </Link>
+          {localStorage.getItem("token") && (
+            <Link to="/dashboard" className="text-indigo-600 hover:underline">
+              Mon dashboard →
+            </Link>
+          )}
+        </div>
 
         <div className="card flex flex-col md:flex-row gap-8 items-start">
           {profile.avatar_url && (
@@ -2904,11 +2917,11 @@ useEffect(() => {
 
       <div className="max-w-6xl mx-auto">
 
-        <Link
-          to="/"
+       <Link
+          to={localStorage.getItem("token") ? "/dashboard" : "/"}
           className="inline-block mb-6 text-indigo-600 hover:underline"
         >
-          ← Retour à l’accueil
+          {localStorage.getItem("token") ? "← Retour à mon dashboard" : "← Retour à l'accueil"}
         </Link>
 
         <h1 className="text-5xl font-bold text-gray-900">

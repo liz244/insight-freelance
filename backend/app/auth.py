@@ -2,8 +2,12 @@ from . import models
 from datetime import datetime, timedelta, timezone
 from jose import jwt
 import hashlib
+import os
 
-SECRET_KEY = "change-this-secret-key-later"
+# En local : valeur de secours utilisée automatiquement.
+# En production (Render...) : on définit la variable d'environnement
+# SECRET_KEY avec une vraie clé secrète aléatoire, jamais mise sur GitHub.
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-only-secret-key-do-not-use-in-production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
