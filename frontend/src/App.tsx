@@ -217,6 +217,7 @@ function ImageUpload({
       <div className="flex items-center gap-4">
         {value && (
           <img
+              loading="lazy"
             src={value}
             alt="Aperçu"
             className="w-16 h-16 rounded-lg object-cover border border-gray-200"
@@ -244,49 +245,49 @@ function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50">
 
-      <nav className="flex items-center justify-between px-8 py-5 bg-white/80 backdrop-blur border-b border-indigo-100">
+      <nav className="flex items-center justify-between px-4 md:px-8 py-4 md:py-5 bg-white/80 backdrop-blur border-b border-indigo-100">
         <Link
           to="/"
-          className="text-2xl font-bold text-indigo-700"
+          className="text-lg md:text-2xl font-bold text-indigo-700 shrink-0"
         >
           Insight Freelance
         </Link>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-2 md:gap-4 items-center">
           <Link
             to="/freelances"
-            className="text-gray-700 hover:text-indigo-600 transition"
+            className="text-sm md:text-base text-gray-700 hover:text-indigo-600 transition hidden sm:block"
           >
             Freelances
           </Link>
 
           <Link
             to="/login"
-            className="text-gray-700 hover:text-indigo-600 transition"
+            className="text-sm md:text-base text-gray-700 hover:text-indigo-600 transition"
           >
             Connexion
           </Link>
 
           <Link
             to="/register"
-            className="btn-primary"
+            className="text-sm md:text-base bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 md:px-5 md:py-2.5 rounded-lg font-semibold transition whitespace-nowrap"
           >
             Créer un compte
           </Link>
         </div>
       </nav>
 
-      <section className="text-center px-6 py-24">
-        <h1 className="text-6xl font-bold max-w-5xl mx-auto text-gray-900 leading-tight">
+      <section className="text-center px-6 py-16 md:py-24">
+        <h1 className="text-4xl md:text-6xl font-bold max-w-5xl mx-auto text-gray-900 leading-tight">
           Trouvez le freelance idéal pour votre projet
         </h1>
 
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-6 leading-relaxed">
+        <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mt-6 leading-relaxed">
           Designers, développeurs, experts beauté et créatifs réunis sur une
           plateforme moderne pour présenter leurs services et recevoir des demandes.
         </p>
 
-        <div className="flex justify-center gap-4 mt-10">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8 md:mt-10">
           <Link
             to="/freelances"
             className="btn-primary"
@@ -303,12 +304,12 @@ function Home() {
         </div>
       </section>
 
-      <section className="px-8 py-14">
-        <h2 className="section-title text-center mb-10">
+      <section className="px-4 md:px-8 py-10 md:py-14">
+        <h2 className="section-title text-center mb-8 md:mb-10">
           Catégories populaires
         </h2>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-5 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-5 max-w-6xl mx-auto">
 
           {[
             "Développement",
@@ -319,9 +320,9 @@ function Home() {
           ].map((cat) => (
             <div
               key={cat}
-              className="card text-center hover:shadow-lg hover:-translate-y-1 transition"
+              className="card text-center hover:shadow-lg hover:-translate-y-1 transition p-4 md:p-6"
             >
-              <p className="font-semibold text-gray-800">
+              <p className="font-semibold text-gray-800 text-sm md:text-base leading-tight">
                 {cat}
               </p>
             </div>
@@ -330,9 +331,9 @@ function Home() {
         </div>
       </section>
 
-      <section className="px-8 py-16 bg-white border-y border-indigo-100">
+      <section className="px-4 md:px-8 py-12 md:py-16 bg-white border-y border-indigo-100">
 
-        <h2 className="section-title text-center mb-10">
+        <h2 className="section-title text-center mb-8 md:mb-10">
           Comment ça marche ?
         </h2>
 
@@ -409,7 +410,8 @@ function Login() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 flex items-center justify-center">
       <div className="w-full max-w-sm">
-<Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
+
+        <Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
           ← Retour à l'accueil
         </Link>
 
@@ -417,7 +419,6 @@ function Login() {
           <Link to="/" className="text-2xl font-bold text-indigo-700">
             Insight Freelance
           </Link>
-        
           <h1 className="text-3xl font-bold text-gray-900 mt-6">
             Bon retour parmi nous
           </h1>
@@ -429,6 +430,10 @@ function Login() {
         <div className="card space-y-4">
           <input
             className="input"
+            type="email"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             placeholder="Email" aria-label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -487,9 +492,11 @@ function Register() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-16 flex items-center justify-center">
       <div className="w-full max-w-2xl">
-<Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
+
+        <Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
           ← Retour à l'accueil
         </Link>
+
         <div className="text-center mb-10">
           <p className="text-sm font-semibold tracking-wide text-indigo-600 uppercase">
             Bienvenue
@@ -575,6 +582,10 @@ function Register() {
 
             <input
               className="input"
+              type="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
               placeholder="Email" aria-label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -667,19 +678,21 @@ const sendRequest = async () => {
       <div className="max-w-5xl mx-auto space-y-8">
 
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <Link to="/freelances" className="text-indigo-600 hover:underline">
-            ← Retour aux freelances
-          </Link>
-          {localStorage.getItem("token") && (
-            <Link to="/dashboard" className="text-indigo-600 hover:underline">
-              Mon dashboard →
-            </Link>
-          )}
-        </div>
+  {localStorage.getItem("token") ? (
+  <Link to="/dashboard" className="text-indigo-600 hover:underline">
+    ← Retour au dashboard
+  </Link>
+) : (
+  <Link to="/freelances" className="text-indigo-600 hover:underline">
+    ← Retour aux freelances
+  </Link>
+)}
+</div>
 
         <div className="card flex flex-col md:flex-row gap-8 items-start">
           {profile.avatar_url && (
             <img
+              loading="lazy"
               src={profile.avatar_url}
               alt={`Photo de profil de ${profile.name}`}
               className="w-36 h-36 rounded-full object-cover border-4 border-indigo-100"
@@ -790,6 +803,7 @@ const sendRequest = async () => {
             {portfolioImages.map((image) => (
               <div key={image.id} className="space-y-2">
                 <img
+              loading="lazy"
                   src={image.image_url}
                   alt={image.title}
                   className="w-full h-48 object-cover rounded-xl"
@@ -1002,16 +1016,16 @@ setPortfolioImages(portfolioRes.data);
   }
   if (role === "client") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-10">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-5xl font-bold text-gray-900">Mon espace</h1>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-4 md:px-6 py-8 md:py-10">
+        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-900">Mon espace</h1>
             <button
               onClick={() => {
                 localStorage.removeItem("token");
                 navigate("/");
               }}
-              className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition"
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition text-sm md:text-base self-start md:self-auto"
             >
               Se déconnecter
             </button>
@@ -1193,26 +1207,26 @@ const deletePortfolioImage = async (imageId: string) => {
   }
 };
   return (
-  <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-10">
+  <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-4 md:px-6 py-8 md:py-10">
 
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8">
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-5xl font-bold text-gray-900">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <h1 className="text-3xl md:text-5xl font-bold text-gray-900">
           Dashboard
         </h1>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2 md:gap-3">
           <Link
             to="/conversations"
-            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-5 py-2 rounded-lg transition"
+            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-2 md:px-5 rounded-lg transition text-sm md:text-base"
           >
             Mes conversations
           </Link>
 
           <Link
             to="/assistance"
-            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-5 py-2 rounded-lg transition"
+            className="bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-3 py-2 md:px-5 rounded-lg transition text-sm md:text-base"
           >
             Assistance
           </Link>
@@ -1222,7 +1236,7 @@ const deletePortfolioImage = async (imageId: string) => {
               localStorage.removeItem("token");
               navigate("/");
             }}
-            className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition"
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 md:px-5 rounded-lg transition text-sm md:text-base"
           >
             Se déconnecter
           </button>
@@ -1250,6 +1264,7 @@ const deletePortfolioImage = async (imageId: string) => {
 
           {myProfile.avatar_url && (
             <img
+              loading="lazy"
               src={myProfile.avatar_url}
               alt={`Photo de profil de ${myProfile.name}`}
               className="w-28 h-28 rounded-full object-cover border-4 border-indigo-100"
@@ -1355,6 +1370,7 @@ const deletePortfolioImage = async (imageId: string) => {
                 className="border border-gray-200 rounded-xl p-3 bg-gray-50 space-y-3"
               >
                 <img
+              loading="lazy"
                   src={image.image_url}
                   alt={image.title}
                   className="w-full h-32 object-cover rounded-lg"
@@ -2134,6 +2150,7 @@ function Favorites() {
                 <Link to={`/profile/${f.slug}`}>
                   {f.avatar_url && (
                     <img
+              loading="lazy"
                       src={f.avatar_url}
                       alt={f.name}
                       className="w-20 h-20 rounded-full object-cover mb-4 border-4 border-indigo-100"
@@ -2332,7 +2349,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const [tab, setTab] = useState<"freelances" | "clients" | "tickets" | "stats">("stats");
+ const [tab, setTab] = useState<"stats" | "freelances" | "clients" | "tickets">("stats");
 
   const [freelances, setFreelances] = useState<any[]>([]);
   const [clients, setClients] = useState<any[]>([]);
@@ -2403,14 +2420,14 @@ function AdminDashboard() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-6 py-10">
       <div className="max-w-6xl mx-auto space-y-8">
 
-        <div className="flex items-center justify-between">
-          <h1 className="text-5xl font-bold text-gray-900">Admin</h1>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <h1 className="text-3xl md:text-5xl font-bold text-gray-900">Admin</h1>
           <button
             onClick={() => {
               localStorage.removeItem("token");
               navigate("/");
             }}
-            className="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg transition"
+            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition text-sm md:text-base self-start md:self-auto"
           >
             Se déconnecter
           </button>
@@ -2430,7 +2447,9 @@ function AdminDashboard() {
               {t === "stats" && "Statistiques"}
               {t === "freelances" && "Freelances"}
               {t === "clients" && "Clients"}
-              {t === "tickets" && "Tickets"}
+               {t === "tickets" && "Tickets"}
+
+              
             </button>
           ))}
         </div>
@@ -2917,11 +2936,11 @@ useEffect(() => {
 
       <div className="max-w-6xl mx-auto">
 
-       <Link
-          to={localStorage.getItem("token") ? "/dashboard" : "/"}
+        <Link
+          to="/"
           className="inline-block mb-6 text-indigo-600 hover:underline"
         >
-          {localStorage.getItem("token") ? "← Retour à mon dashboard" : "← Retour à l'accueil"}
+          ← Retour à l’accueil
         </Link>
 
         <h1 className="text-5xl font-bold text-gray-900">
@@ -3015,6 +3034,7 @@ useEffect(() => {
 
               {p.avatar_url && (
                 <img
+              loading="lazy"
                   src={p.avatar_url}
                   alt={p.name}
                   className="w-24 h-24 rounded-full object-cover mb-5 border-4 border-indigo-100"
