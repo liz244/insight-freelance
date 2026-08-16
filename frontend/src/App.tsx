@@ -2936,12 +2936,15 @@ useEffect(() => {
 
       <div className="max-w-6xl mx-auto">
 
-        <Link
-          to="/"
-          className="inline-block mb-6 text-indigo-600 hover:underline"
-        >
-          ← Retour à l’accueil
-        </Link>
+        {localStorage.getItem("token") ? (
+  <Link to="/dashboard" className="inline-block mb-6 text-indigo-600 hover:underline">
+    ← Retour au dashboard
+  </Link>
+) : (
+  <Link to="/" className="inline-block mb-6 text-indigo-600 hover:underline">
+    ← Retour à l'accueil
+  </Link>
+)}
 
         <h1 className="text-5xl font-bold text-gray-900">
           Découvrir les freelances
